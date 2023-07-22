@@ -6,13 +6,24 @@ import {
   View,
   TextInput,
   Button,
+  ScrollView,
+  FlatList,
 } from 'react-native';
 
-export default function App() {
+export default function App () {
   const [text, setText] = useState('');
+  const [goals, setGoals] = useState([]);
 
   function onPress () {
-    console.info(text);
+    if (text) {
+      setGoals([
+        ...goals,
+        {
+          key: Math.random().toString(),
+          text,
+        },
+      ]);
+    }
   }
 
   return (
@@ -32,7 +43,18 @@ export default function App() {
       </View>
 
       <View style={styles.goalsContainer}>
-        <Text>List of goals</Text>
+        <FlatList
+          data={goals}
+          alwaysBounceVertical={false}
+          renderItem={({ item }) => (
+            <View style={styles.goal}>
+              <Text style={styles.goalText}>
+                {item.text}
+              </Text>
+            </View>
+          )}
+          keyExtractor={item => item.key}
+        />
       </View>
 
       <StatusBar style="auto" />
@@ -65,4 +87,13 @@ const styles = StyleSheet.create({
   goalsContainer: {
     flex: 5,
   },
+  goal: {
+    margin: 8,
+    padding: 8,
+    borderRadius: 6,
+    backgroundColor: '#5e0acc',
+  },
+  goalText: {
+    color: 'white',
+  }
 });
